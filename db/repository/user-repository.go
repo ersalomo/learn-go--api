@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"go-api/model"
+	"go-api/db/model"
 	"gorm.io/gorm"
 )
 
@@ -26,7 +26,8 @@ func (r *repository) FindAll() ([]model.User, error) {
 }
 func (r *repository) FindById(id int) (model.User, error) {
 	var user model.User
-	err := r.db.Find(&user, id)
+	err := r.db.Where("id = ? ", id).First(&user)
+	//err := r.db.Find(&user, id)
 	return user, err.Error
 }
 

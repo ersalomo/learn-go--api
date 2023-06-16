@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"go-api/model"
-	"go-api/service"
+	"go-api/db/model"
+	"go-api/db/service"
 	"net/http"
 	"strconv"
 	"strings"
@@ -38,6 +38,7 @@ func (h *userHandler) GetUser(c *gin.Context) {
 	})
 }
 func (h *userHandler) GetUsers(c *gin.Context) {
+	//email := c.Query("email")
 	users, _ := h.userService.FindAll()
 	c.JSON(http.StatusOK, gin.H{
 		"status": "success",

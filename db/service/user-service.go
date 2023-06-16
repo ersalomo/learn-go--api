@@ -1,8 +1,8 @@
 package service
 
 import (
-	"go-api/model"
-	"go-api/repository"
+	"go-api/db/model"
+	"go-api/db/repository"
 )
 
 type Service interface {
