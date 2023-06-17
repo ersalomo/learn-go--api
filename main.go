@@ -3,10 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"go-api/api/user_handler"
-	"go-api/db/model"
-	"go-api/db/repository"
-	"go-api/db/service"
+	"go-api/api/routes"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -15,7 +12,6 @@ import (
 
 func main() {
 
-	//dsn := os.Getenv("DB_URL")
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error load .env file")
@@ -28,25 +24,16 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	if err = db.AutoMigrate(&model.User{}); err != nil {
-		log.Fatal(err.Error())
-		return
-	}
-
-	userRepo := repository.NewRepository(db)
-	userService := service.NewService(userRepo)
-	userHandler := handler.Userhandler(userService)
 	router := gin.Default()
-	v1 := router.Group("/api/v1")
 
-	v1.POST("/users", userHandler.StoreUser)
+	userRouter := router.Group("/api/users")
+	routes.SetupUserRoute(db, userRouter)
 
-	protected := router.Group("/api/v1/authenticated")
-	//protected.Use(middleware.DeserilizeMiddleware())
-	protected.GET("/users", userHandler.GetUsers)
-	protected.GET("/users/:id", userHandler.GetUser)
+	bookRouter := router.Group("/api/books")
+	routes.SetupBookRouter(db, bookRouter)
 
 	err = router.Run(":8008")
+
 	if err != nil {
 		return
 	}
